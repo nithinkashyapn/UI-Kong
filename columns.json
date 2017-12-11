@@ -1,0 +1,44 @@
+[
+
+    {
+        "name": "created_at",
+        "title": "Created"
+    },
+    {
+        "name": "strip_uri",
+        "title": "Strip URI"
+    },
+    {
+        "name": "id",
+        "title": "ID",
+        "visible": false        
+    },
+    {
+        "name": "name",
+        "title": "Name"
+    },
+    {
+        "name": "upstream_url",
+        "title": "Upstream URI"
+    },
+    {
+        "name": "http_if_terminated",
+        "title": "HTTP if terminated"
+    },
+    {
+        "name": "https_only",
+        "title": "HTTPS"
+    },
+    {
+        "name": "retries",
+        "title": "Retries"
+    },
+    {
+        "name": "methods",
+        "title": "Methods"
+    },
+    {
+        "name": "preserve_host",
+        "title": "Preserve Host"
+    }
+]
