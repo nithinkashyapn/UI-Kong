@@ -112,7 +112,19 @@
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                row.delete();
+                                let tu = 'http://139.59.9.37:8001/apis/' + row.value.id;
+                                $.ajax({
+                                    type: "DELETE",
+                                    dataType: 'json',
+                                    url: tu,
+                                    success: function(e){
+                                        alert("Done.");
+                                        location.reload();
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+                                });
                             }
                         }
                     }
