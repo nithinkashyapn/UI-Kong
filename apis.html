@@ -1,121 +1,6 @@
 <link rel="stylesheet" href="CSS/footable.standalone.css">     
 <script src="JS/footable.js"></script>
 <script src="https://use.fontawesome.com/574bd8552f.js"></script>
-<!-- <table id="api" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table> -->
-<!-- <table class="table" data-filtering="true">
-	<thead>
-	<tr>
-		<th data-breakpoints="xs">ID</th>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th data-breakpoints="xs">Job Title</th>
-		<th data-breakpoints="xs sm">Started On</th>
-		<th data-breakpoints="xs sm md">Date of Birth</th>
-		<th data-type="html" data-breakpoints="xs sm md">Info</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>1</td>
-		<td>Dennise</td>
-		<td>Fuhrman</td>
-		<td>High School History Teacher</td>
-		<td>November 8th 2011</td>
-		<td>July 25th 1960</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>2</td>
-		<td>Elodia</td>
-		<td>Weisz</td>
-		<td>Wallpaperer Helper</td>
-		<td>October 15th 2010</td>
-		<td>March 30th 1982</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>3</td>
-		<td>Raeann</td>
-		<td>Haner</td>
-		<td>Internal Medicine Nurse Practitioner</td>
-		<td>November 28th 2013</td>
-		<td>February 26th 1966</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>4</td>
-		<td>Junie</td>
-		<td>Landa</td>
-		<td>Offbearer</td>
-		<td>October 31st 2010</td>
-		<td>March 29th 1966</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>5</td>
-		<td>Solomon</td>
-		<td>Bittinger</td>
-		<td>Roller Skater</td>
-		<td>December 29th 2011</td>
-		<td>September 22nd 1964</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>6</td>
-		<td>Bar</td>
-		<td>Lewis</td>
-		<td>Clown</td>
-		<td>November 12th 2012</td>
-		<td>August 4th 1991</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>7</td>
-		<td>Usha</td>
-		<td>Leak</td>
-		<td>Ships Electronic Warfare Officer</td>
-		<td>August 14th 2012</td>
-		<td>November 20th 1979</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	<tr>
-		<td>8</td>
-		<td>Lorriane</td>
-		<td>Cooke</td>
-		<td>Technical Services Librarian</td>
-		<td>September 21st 2010</td>
-		<td>April 7th 1969</td>
-		<td><a href="#placeholder">Info link</a></td>
-    </tr>
-    <tr>
-		<td>8</td>
-		<td>Lorriane</td>
-		<td>Cooke</td>
-		<td>Technical Services Librarian</td>
-		<td>September 21st 2010</td>
-		<td>April 7th 1969</td>
-		<td><a href="#placeholder">Info link</a></td>
-    </tr>
-    <tr>
-		<td>8</td>
-		<td>Lorriane</td>
-		<td>Cooke</td>
-		<td>Technical Services Librarian</td>
-		<td>September 21st 2010</td>
-		<td>April 7th 1969</td>
-		<td><a href="#placeholder">Info link</a></td>
-    </tr>
-    <tr>
-		<td>8</td>
-		<td>Lorriane</td>
-		<td>Cooke</td>
-		<td>Technical Services Librarian</td>
-		<td>September 21st 2010</td>
-		<td>April 7th 1969</td>
-		<td><a href="#placeholder">Info link</a></td>
-	</tr>
-	</tbody>
-</table> -->
 
 <!-- Table Markup -->
 <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
@@ -213,15 +98,15 @@
                     },
                     editRow: function(row){
                         var values = row.val();
-                        $editor.find('#created_at').val(values.id);
-                        $editor.find('#strip_uri').val(values.firstName);
-                        $editor.find('#name').val(values.lastName);
-                        $editor.find('#upstream_url').val(values.jobTitle);
-                        $editor.find('#http_if_terminated').val(values.status);
-                        $editor.find('#https_only').val(values.started.format('YYYY-MM-DD'));
-                        $editor.find('#retries').val(values.dob.format('YYYY-MM-DD'));
-                        $editor.find('#methods').val(values.started.format('YYYY-MM-DD'));
-                        $editor.find('#preserve_host').val(values.dob.format('YYYY-MM-DD'));
+                        $editor.find('#created_at').val(values.created_at);
+                        $editor.find('#strip_uri').val(values.strip_uri);
+                        $editor.find('#name').val(values.name);
+                        $editor.find('#upstream_url').val(values.upstream_url);
+                        $editor.find('#http_if_terminated').val(values.http_if_terminated);
+                        $editor.find('#https_only').val(values.https_only);
+                        $editor.find('#retries').val(values.retries);
+                        $editor.find('#methods').val(values.methods);
+                        $editor.find('#preserve_host').val(values.preserve_host);
                         $modal.data('row', row);
                         $editorTitle.text('Edit row #' + values.id);
                         $modal.modal('show');
@@ -240,13 +125,11 @@
                 e.preventDefault();
                 var row = $modal.data('row'),
                     values = {
-                        id: $editor.find('#name').val(),
-                        firstName: $editor.find('#upstream_url').val(),
-                        lastName: $editor.find('#strip_uri').val(),
-                        jobTitle: $editor.find('#jobTitle').val(),
-                        started: moment($editor.find('#created_at').val()),
-                        dob: moment($editor.find('#methods').val()),
-                        status: $editor.find('#status option:selected').val()
+                        name: $editor.find('#name').val(),
+                        upstream_url: $editor.find('#upstream_url').val(),
+                        strip_uri: $editor.find('#strip_uri').val(),
+                        created_at: moment($editor.find('#created_at').val()),
+                        methods: moment($editor.find('#methods').val())
                     };
 
                 if (row instanceof FooTable.Row){
@@ -260,3 +143,6 @@
         });
     });     
 </script>
+   <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
