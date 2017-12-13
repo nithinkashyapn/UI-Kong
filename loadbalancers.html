@@ -84,11 +84,17 @@
         <div class="modal-dialog" role="document">
             <form class="modal-content form-horizontal" id="target">
                 <div class="modal-body">
-                    <input type="text" id="id" name="id"/>
+                    <input type="hidden" id="id" name="id"/>
                     <div class="form-group required">
-                        <label for="targetname" class="col-sm-3 control-label">Name</label>
+                        <label for="targetname" class="col-sm-3 control-label">Target</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="targetweight" class="col-sm-3 control-label">Weight</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="Weight" required>
                         </div>
                     </div>
                 </div>
@@ -236,10 +242,7 @@
                 });
 
 
-                function up(e) {
-
-                    console.log("HERERERERERERERRERE");
-                    
+                function up(e) {                    
                     e.preventDefault();
                     var $row = $(this).closest('tr'); 
                     var $prerow = $row.prevAll('tr').first();
@@ -262,16 +265,22 @@
                                             $modal.modal('show');
                                             console.log(rowey.name);
                                         },
-                                        editRow: function(row){
-                                            var values = row.val();
-                                            $editor.find('#id').val(values.id);
-                                            
-                                            $modal.data('row', row);
-                                            $modal.modal('show');
-                                        },
                                         deleteRow: function(row){
+                                            console.log(rowey.name);
                                             if (confirm('Are you sure you want to delete the row?')){
-                                                row.delete();
+                                                let tu = 'http://139.59.9.37:8001/upstreams/'+rowey.name+'/targets/'+row.value.id;
+                                                $.ajax({
+                                                    type: "DELETE",
+                                                    dataType: 'json',
+                                                    url: tu,
+                                                    success: function(e){
+                                                        alert("Done.");
+                                                        location.reload();
+                                                    },
+                                                    error: function(err){
+                                                        alert("Error.");
+                                                    }
+                                                });
                                             }
                                         }
                                     }
@@ -283,52 +292,35 @@
                                 e.preventDefault();
                                 var row = $modal.data('row'),
                                     values = {
-                                        id: $editor.find('#id').val(),
-                                        firstName: $editor.find('#firstName').val(),
-                                        lastName: $editor.find('#lastName').val(),
-                                        jobTitle: $editor.find('#jobTitle').val(),
-                                        started: moment($editor.find('#startedOn').val(), 'YYYY-MM-DD'),
-                                        dob: moment($editor.find('#dob').val(), 'YYYY-MM-DD'),
-                                        status: $editor.find('#status option:selected').val()
+                                        target: $editor.find('#targetname').val(),
+                                        weight: $editor.find('#targetweight').val()
                                     };
-
+                                console.log(values);
                                 if (row instanceof FooTable.Row){
-                                    row.val(values);
+                                    alert("Already there");
                                 } else {
-                                    values.id = uid++;
-                                    ft.rows.add(values);
+                                    let tempurl = 'http://139.59.9.37:8001/upstreams/' + rowey.name + '/targets';
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: 'json',
+                                        url: tempurl,
+                                        data: values,
+                                        success: function(e){
+                                            alert("Done.");
+                                            location.reload();
+                                        },
+                                        error: function(err){
+                                            alert("Error.");
+                                        }
+                                    });
                                 }
                                 $modal.modal('hide');
                             });
                         });
                     });
-                    console.log("Row is",rowey);
                     $target.find('#targetid').val(rowey.id);
                     $target.find('#targetname').val(rowey.name);
                     $target.modal('show');
-                    // if($prerow.length){
-                    //     var row = FooTable.getRow($row);
-                    //     var prerow = FooTable.getRow($prerow);
-                    //     console.log(row, prerow);
-                    //     //var id = e.target.attributes["data-row"].value - 1;
-                    //     row_values = { // create a hash of the editor row values
-                    //     id: row.value.id - 1,
-                    //     name: row.value.name,
-                    //     action: row.value.id - 1
-                    //     };
-                    //     prerow_values = { // create a hash of the editor row values
-                    //     id: prerow.value.id + 1,
-                    //     name: prerow.value.name,
-                    //     action: prerow.value.id + 1 
-                    //     };
-
-                    //     row.val(row_values);
-                    //     prerow.val(prerow_values);
-                    //     //ft.o.rows[id].name = "ddd";
-                    //     //ft.init();
-                    //     console.log("Up row. Name: " + row.value.name);  
-                    // }     
-    
                 }    
         });
     });
