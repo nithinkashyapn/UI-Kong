@@ -9,11 +9,16 @@
         "title": "Created"
     },
     {
-        "name": "name",
-        "title": "Name"
+        "name": "upstream_id",
+        "title": "UID",
+        "visible": false        
     },
     {
-        "name": "slots",
-        "title": "SLOTS"
+        "name": "target",
+        "title": "TARGET"
+    },
+    {
+        "name": "weight",
+        "title": "WEIGHT"
     }
 ]

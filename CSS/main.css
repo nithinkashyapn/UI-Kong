@@ -1,0 +1,10 @@
+#target-modal 
+{
+    min-width: 700px !important;
+    min-height:  700px !important; 
+} 
+
+#exampleModal {
+    min-width: 500px !important;
+    min-height:  500px !important; 
+}
