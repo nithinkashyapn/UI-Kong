@@ -48,40 +48,13 @@
             <div class="modal-dialog" role="document">
                 <form class="modal-content form-horizontal" id="editor">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="editor-title">Add API</h4>
+                        <h4 class="modal-title" id="editor-title">Add LB</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group required">
                             <label for="name" class="col-sm-3 control-label">Name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="strip_uri" class="col-sm-3 control-label">STRIP URI</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" name="strip_uri" id="strip_uri">
-                                    <option value="true">TRUE</option>
-                                    <option value="false">FALSE</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="methods" class="col-sm-3 control-label">METHODS</label>
-                            <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="methods" name="methods" placeholder="methods" required>
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="uris" class="col-sm-3 control-label">URIs</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="uris" name="uris" placeholder="URIs" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="upstream_url" class="col-sm-3 control-label">UPSTREAM URL</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="upstream_url" name="upstream_url" placeholder="UPSTREAM URL" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -104,7 +77,7 @@
     <script>
         jQuery(function($){
 
-        $.getJSON('http://139.59.9.37:8001/apis', function(data) {
+        $.getJSON('http://139.59.9.37:8001/upstreams', function(data) {
                 
             for(let i=0;i<data.data.length;i++){
                 data.data[i].created_at = new Date(data.data[i].created_at).toDateString();
@@ -114,7 +87,38 @@
                 $editor = $('#editor'),
                 $editorTitle = $('#editor-title'),
                 ft = FooTable.init('#showcase-example-1', {
-                    columns: $.get("./columns.json"),
+                    columns: [
+                        {
+                            "name": "id",
+                            "title": "ID",
+                            "visible": false        
+                        },
+                        {
+                            "name": "created_at",
+                            "title": "Created"
+                        },
+                        {
+                            "name": "name",
+                            "title": "Name"
+                        },
+                        {
+                            "name": "slots",
+                            "title": "SLOTS"
+                        },
+                        {
+                            "name":"targets",
+                            "title":"TARGETS",
+                            "formatter": function (value) {
+                                var actions = $('<div/>')
+                                var user_button = ($('<button/>', {"type":"button","class":"btn btn-dark"})
+                                .on("click", this, up)
+                                )
+                                .appendTo(actions); 
+                                
+                                return actions;
+                                }
+                        }
+                    ],
                     rows: data.data,
                     editing: {
                         addRow: function(){
@@ -127,15 +131,8 @@
                             var values = row.val();
                             $editor.find('#id').val(values.id);
                             $editor.find('#created_at').val(values.created_at);
-                            $editor.find('#strip_uri').val(values.strip_uri);
                             $editor.find('#name').val(values.name);
-                            $editor.find('#uris').val(values.uris);
-                            $editor.find('#upstream_url').val(values.upstream_url);
-                            $editor.find('#http_if_terminated').val(values.http_if_terminated);
-                            $editor.find('#https_only').val(values.https_only);
-                            $editor.find('#retries').val(values.retries);
-                            $editor.find('#methods').val(values.methods);
-                            $editor.find('#preserve_host').val(values.preserve_host);
+                            $editor.find('#slots').val(values.slots);
                             $modal.data('row', row);
                             $editorTitle.text('Edit ' + values.name + ' ?');
                             $modal.modal('show');
@@ -162,31 +159,20 @@
                 uid = 10001;
         
                 $editor.on('submit', function(e){
-                    console.log("HERE i AM");
                     if (this.checkValidity && !this.checkValidity()) return;
                     e.preventDefault();
                     var row = $modal.data('row'),
                         values = {
                             id: $editor.find('#id').val(),
                             created_at: $editor.find('#created_at').val(),
-                            strip_uri: $editor.find('#strip_uri').val(),
-                            uris: $editor.find('#uris').val(),
-                            name: $editor.find('#name').val(),
-                            upstream_url: $editor.find('#upstream_url').val(),
-                            http_if_terminated: $editor.find('#http_if_terminated').val(),
-                            https_only: $editor.find('#https_only').val(),
-                            retries: $editor.find('#retries').val(),
-                            methods: $editor.find('#methods').val(),
-                            preserve_host: $editor.find('#preserve_host').val(),
+                            slots: $editor.find('#slots').val(),
+                            name: $editor.find('#name').val()
                         };
 
                     if (row instanceof FooTable.Row){
                         let interim = {};
                         interim.name = values.name;
-                        interim.strip_uri = values.strip_uri;
-                        interim.methods = values.methods;
-                        interim.uris = values.uris;
-                        interim.upstream_url = values.upstream_url;
+                        interim.slots = values.slots;
                         let tu = "http://139.59.9.37:8001/apis/" + values.id;
                         $.ajax({
                             type: "PATCH",
@@ -202,17 +188,12 @@
                             }
                         });
                     } else {
-                        console.log("Here");
                         let interim = {};
                         interim.name = values.name;
-                        interim.strip_uri = values.strip_uri;
-                        interim.methods = values.methods;
-                        interim.uris = values.uris;
-                        interim.upstream_url = values.upstream_url;
                         $.ajax({
                             type: "PUT",
                             dataType: 'json',
-                            url: "http://139.59.9.37:8001/apis/",
+                            url: "http://139.59.9.37:8001/upstreams",
                             data: interim,
                             success: function(e){
                                 alert("Done.");
@@ -226,6 +207,41 @@
                     $modal.modal('hide');
                 });
 
+
+                function up(e) {
+
+                    console.log("HERERERERERERERRERE");
+                    
+                    e.preventDefault();
+                    var $row = $(this).closest('tr'); 
+                    var $prerow = $row.prevAll('tr').first();
+                    var row = FooTable.getRow($row);
+                    row = row.value.id;
+                    console.log("Row is",row);
+                    // if($prerow.length){
+                    //     var row = FooTable.getRow($row);
+                    //     var prerow = FooTable.getRow($prerow);
+                    //     console.log(row, prerow);
+                    //     //var id = e.target.attributes["data-row"].value - 1;
+                    //     row_values = { // create a hash of the editor row values
+                    //     id: row.value.id - 1,
+                    //     name: row.value.name,
+                    //     action: row.value.id - 1
+                    //     };
+                    //     prerow_values = { // create a hash of the editor row values
+                    //     id: prerow.value.id + 1,
+                    //     name: prerow.value.name,
+                    //     action: prerow.value.id + 1 
+                    //     };
+
+                    //     row.val(row_values);
+                    //     prerow.val(prerow_values);
+                    //     //ft.o.rows[id].name = "ddd";
+                    //     //ft.init();
+                    //     console.log("Up row. Name: " + row.value.name);  
+                    // }     
+    
+                }    
         });
     });
     </script>      

@@ -1,0 +1,19 @@
+[
+    {
+        "name": "id",
+        "title": "ID",
+        "visible": false        
+    },
+    {
+        "name": "created_at",
+        "title": "Created"
+    },
+    {
+        "name": "name",
+        "title": "Name"
+    },
+    {
+        "name": "slots",
+        "title": "SLOTS"
+    }
+]
