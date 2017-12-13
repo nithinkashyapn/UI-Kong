@@ -42,7 +42,7 @@
     </div>
     </nav>
     <div class="card-body">
-        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
+        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true" data-editing-allow-edit="false"></table>
         <!-- Editing Modal Markup -->
         <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="editor-title">
             <div class="modal-dialog" role="document">
@@ -55,6 +55,12 @@
                             <label for="name" class="col-sm-3 control-label">Name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label for="slots" class="col-sm-3 control-label">Slots</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" id="slots" name="slots" placeholder="Must be greater than 100" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -88,7 +94,7 @@
                     <div class="form-group required">
                         <label for="targetname" class="col-sm-3 control-label">Target</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Name" required>
+                            <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Target" required>
                         </div>
                     </div>
                     <div class="form-group required">
@@ -173,7 +179,7 @@
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                let tu = 'http://139.59.9.37:8001/apis/' + row.value.id;
+                                let tu = 'http://139.59.9.37:8001/upstreams/' + row.value.id;
                                 $.ajax({
                                     type: "DELETE",
                                     dataType: 'json',
@@ -204,39 +210,28 @@
                         };
 
                     if (row instanceof FooTable.Row){
-                        let interim = {};
-                        interim.name = values.name;
-                        interim.slots = values.slots;
-                        let tu = "http://139.59.9.37:8001/apis/" + values.id;
-                        $.ajax({
-                            type: "PATCH",
-                            dataType: 'json',
-                            url: tu,
-                            data: interim,
-                            success: function(e){
-                                alert("Done.");
-                                location.reload();
-                            },
-                            error: function(err){
-                                alert(err);
-                            }
-                        });
+                        alert("Already exists");
                     } else {
                         let interim = {};
                         interim.name = values.name;
-                        $.ajax({
-                            type: "PUT",
-                            dataType: 'json',
-                            url: "http://139.59.9.37:8001/upstreams",
-                            data: interim,
-                            success: function(e){
-                                alert("Done.");
-                                location.reload();
-                            },
-                            error: function(err){
-                                alert(err);
-                            }
-                        });
+                        interim.slots = values.slots;
+                        if(values.slots < 100){
+                            alert("Aborted.");
+                        }else{
+                            $.ajax({
+                                type: "PUT",
+                                dataType: 'json',
+                                url: "http://139.59.9.37:8001/upstreams",
+                                data: interim,
+                                success: function(e){
+                                    alert("Done.");
+                                    location.reload();
+                                },
+                                error: function(err){
+                                    alert("Error.");
+                                }
+                            });
+                        }
                     }
                     $modal.modal('hide');
                 });
