@@ -111,11 +111,11 @@
         <div class="modal-dialog" role="document">
             <form class="modal-content form-horizontal" id="target">
                 <div class="modal-body">
-                    <input type="hidden" id="id" name="id"/>
-                    <div class="form-group required">
+                    <input type="text" id="targetid" name="targetid"/>
+                    <div class="form-group">
                         <label for="targetweight" class="col-sm-3 control-label">Consumer ID</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="ID" required>
+                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="ID">
                         </div>
                     </div>
                     <div class="form-group required">
@@ -332,21 +332,22 @@
                     var $prerow = $row.prevAll('tr').first();
                     var row = FooTable.getRow($row);
                     let rowey = {};
+                    // console.log("Row is", row);
                     rowey.id = row.value.id;
                     rowey.name = row.value.name;
                     let tarurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
                     $.getJSON(tarurl, function(datatarget) {
-                        console.log("DT is",datatarget.data);
+                        // console.log("DT is",datatarget.data);
                         let tempdata = datatarget.data;
-                        console.log("Tempdata",tempdata);
+                        // console.log("Tempdata",tempdata);
                         for(let k=0;k<tempdata.length;k++){
                             tempdata[k].created_at = new Date(tempdata[k].created_at).toDateString();
                             // console.log(JSON.stringify(texti[k].config));
                             tempdata[k].config = "<div id='code'>" + JSON.stringify(tempdata[k].config) + "</div>";
                         }
-                        console.log("New TD",tempdata);
+                        // console.log("New TD",tempdata);
                         jQuery(function($){
-                            console.log("IN temp",tempdata);
+                            // console.log("IN temp",tempdata);
                             var $modal = $('#target-modal'),
                                 $editor = $('#target'),
                                 ft = FooTable.init('#target-example-1', {
@@ -362,6 +363,7 @@
                                         editRow: function(row){
                                             var values = row.val();
                                             values.config = values.config.replace("<div id='code'>",'').replace("</div>",'');
+                                            // console.log("values is", values);
                                             $editor.find('#targetid').val(values.id);
                                             $editor.find('#targetname').val(values.name);
                                             $editor.find('#targetconfig').val(values.config);
@@ -370,7 +372,7 @@
                                             $modal.modal('show');
                                         },
                                         deleteRow: function(row){
-                                            console.log(rowey.name);
+                                            // console.log(rowey.name);
                                             if (confirm('Are you sure you want to delete the row?')){
                                                 let tu = 'http://139.59.9.37:8001/upstreams/'+rowey.name+'/targets/'+row.value.id;
                                                 $.ajax({
@@ -395,14 +397,31 @@
                                 if (this.checkValidity && !this.checkValidity()) return;
                                 e.preventDefault();
                                 var row = $modal.data('row'),
+                                    idd = $editor.find('#targetid').val(),
                                     values = {
                                         consumer_id: $editor.find('#targetweight').val(),
                                         name: $editor.find('#targetname').val(),
                                         config: $editor.find('#targetconfig').val()
                                     };
-                                console.log(values);
+                                // console.log(rowey);
                                 if (row instanceof FooTable.Row){
-                                    alert("Already there");
+                                    // console.log("values is", values);
+                                    // alert("Already there");
+                                    let tempurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins' + idd;
+                                    $.ajax({
+                                        type: "PATCH",
+                                        dataType: 'json',
+                                        url: tempurl,
+                                        data: values,
+                                        success: function(e){
+                                            alert("Done.");
+                                            location.reload();
+                                        },
+                                        error: function(err){
+                                            alert("Error.");
+                                        }
+                                    });
+
                                 } else {
                                     let tempurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
                                     $.ajax({
