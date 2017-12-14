@@ -335,7 +335,7 @@
                         console.log("Tempdata",tempdata);
                         for(let k=0;k<tempdata.length;k++){
                             // console.log(JSON.stringify(texti[k].config));
-                            tempdata[k].config = JSON.stringify(tempdata[k].config);
+                            tempdata[k].config = "<div id='code'>" + JSON.stringify(tempdata[k].config) + "</div>";
                         }
                         console.log("New TD",tempdata);
                         jQuery(function($){

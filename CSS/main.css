@@ -14,23 +14,25 @@
     overflow: auto;
 }
 
-html{
-    min-width: 100vw;
-    overflow: scroll;    
-    overflow: auto;
-}
-
-tr {
-    margin: 10px;
-}
-
 td {
-    white-space: nowrap;
-    overflow: scroll;
-    width: 200px;
-    height: 25px;
+    white-space: wrap;
+    max-width: 100px;
+    height: 100px;
+    overflow-y: scroll;    
+}
+
+#exampleModal #code{
+    line-height: 1.5em;
+    height: 6em;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    background-color: #D3D3D3;
 }
 
 table{
     table-layout:fixed; 
+}
+
+#exampleModal .modal-dialog {
+ max-width: 900px !important;
 }
