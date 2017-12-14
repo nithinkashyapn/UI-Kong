@@ -9,39 +9,16 @@
         "title": "Created"
     },
     {
-        "name": "strip_uri",
-        "title": "Strip URI"
-    },
-    {
         "name": "name",
         "title": "Name"
     },
     {
-        "name": "uris",
-        "title": "URIS"
+        "name": "config",
+        "title": "CONFIG"
     },
     {
-        "name": "upstream_url",
-        "title": "Upstream URI"
-    },
-    {
-        "name": "http_if_terminated",
-        "title": "HTTP if terminated"
-    },
-    {
-        "name": "https_only",
-        "title": "HTTPS"
-    },
-    {
-        "name": "retries",
-        "title": "Retries"
-    },
-    {
-        "name": "methods",
-        "title": "Methods"
-    },
-    {
-        "name": "preserve_host",
-        "title": "Preserve Host"
+        "name": "api_id",
+        "title": "API ID",
+        "visible": false                
     }
 ]

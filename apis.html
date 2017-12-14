@@ -14,20 +14,20 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.html">Kong</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+			<a class="navbar-brand" href="index.html">Kong</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link">API</a>
+        <a class="nav-link">API</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="plugins.html">PLUGIN</a>
+        <a class="nav-link" href="plugins.html">PLUGIN</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="consumers.html">COMSUMER</a>
+        <a class="nav-link" href="consumers.html">COMSUMER</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="loadbalancers.html">LOAD BALANCER</a>
@@ -42,7 +42,7 @@
     </div>
     </nav>
     <div class="card-body">
-        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
+        <table id="showcase-example-1" class="table" class="apitable" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
         <!-- Editing Modal Markup -->
         <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="editor-title">
             <div class="modal-dialog" role="document">
@@ -98,6 +98,40 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-body">
+                <table id="target-example-1" class="targetable" data-paging="true" data-sorting="true" data-editing="true" data-editing-allow-add="true" data-editing-allow-edit="false" data-state="true"></table>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="target-modal" tabindex="-1" role="dialog" aria-labelledby="target-title">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content form-horizontal" id="target">
+                <div class="modal-body">
+                    <input type="hidden" id="id" name="id"/>
+                    <div class="form-group required">
+                        <label for="targetname" class="col-sm-3 control-label">Target</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Target" required>
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="targetweight" class="col-sm-3 control-label">Weight</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="Weight" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script>
@@ -111,9 +145,69 @@
 
             var $modal = $('#editor-modal'),
                 $editor = $('#editor'),
+                $target = $('#exampleModal'),
                 $editorTitle = $('#editor-title'),
                 ft = FooTable.init('#showcase-example-1', {
-                    columns: $.get("./apicolumns.json"),
+                    columns: [
+                        {
+                            "name": "id",
+                            "title": "ID",
+                            "visible": false        
+                        },
+                        {
+                            "name": "created_at",
+                            "title": "Created"
+                        },
+                        {
+                            "name": "strip_uri",
+                            "title": "Strip URI"
+                        },
+                        {
+                            "name": "name",
+                            "title": "Name"
+                        },
+                        {
+                            "name": "uris",
+                            "title": "URIS"
+                        },
+                        {
+                            "name": "upstream_url",
+                            "title": "Upstream URI"
+                        },
+                        {
+                            "name": "http_if_terminated",
+                            "title": "HTTP if terminated"
+                        },
+                        {
+                            "name": "https_only",
+                            "title": "HTTPS"
+                        },
+                        {
+                            "name": "retries",
+                            "title": "Retries"
+                        },
+                        {
+                            "name": "methods",
+                            "title": "Methods"
+                        },
+                        {
+                            "name": "preserve_host",
+                            "title": "Preserve Host"
+                        },
+                        {
+                            "name":"targets",
+                            "title":"TARGETS",
+                            "formatter": function (value) {
+                                var actions = $('<div/>')
+                                var user_button = ($('<button/>', {"type":"button","class":"btn btn-dark btn-lg"})
+                                .on("click", this, up)
+                                )
+                                .appendTo(actions); 
+                                
+                                return actions;
+                                }
+                        }
+                    ],
                     rows: data.data,
                     editing: {
                         addRow: function(){
@@ -225,6 +319,96 @@
                     $modal.modal('hide');
                 });
 
+
+                function up(e) {                    
+                    e.preventDefault();
+                    var $row = $(this).closest('tr'); 
+                    var $prerow = $row.prevAll('tr').first();
+                    var row = FooTable.getRow($row);
+                    let rowey = {};
+                    rowey.id = row.value.id;
+                    rowey.name = row.value.name;
+                    let tarurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
+                    $.getJSON(tarurl, function(datatarget) {
+                        console.log("DT is",datatarget.data);
+                        let tempdata = datatarget.data;
+                        console.log("Tempdata",tempdata);
+                        for(let k=0;k<tempdata.length;k++){
+                            // console.log(JSON.stringify(texti[k].config));
+                            tempdata[k].config = JSON.stringify(tempdata[k].config);
+                        }
+                        console.log("New TD",tempdata);
+                        jQuery(function($){
+                            console.log("IN temp",tempdata);
+                            var $modal = $('#target-modal'),
+                                $editor = $('#target'),
+                                ft = FooTable.init('#target-example-1', {
+                                    columns: $.get("./apicolumns.json"),
+                                    rows: tempdata,
+                                    editing: {
+                                        addRow: function(){
+                                            $modal.removeData('row');
+                                            $editor[0].reset();
+                                            $modal.modal('show');
+                                            console.log(rowey.name);
+                                        },
+                                        deleteRow: function(row){
+                                            console.log(rowey.name);
+                                            if (confirm('Are you sure you want to delete the row?')){
+                                                let tu = 'http://139.59.9.37:8001/upstreams/'+rowey.name+'/targets/'+row.value.id;
+                                                $.ajax({
+                                                    type: "DELETE",
+                                                    dataType: 'json',
+                                                    url: tu,
+                                                    success: function(e){
+                                                        alert("Done.");
+                                                        location.reload();
+                                                    },
+                                                    error: function(err){
+                                                        alert("Error.");
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }),
+                                uid = 10001;
+
+                                $editor.on('submit', function(e){
+                                if (this.checkValidity && !this.checkValidity()) return;
+                                e.preventDefault();
+                                var row = $modal.data('row'),
+                                    values = {
+                                        target: $editor.find('#targetname').val(),
+                                        weight: $editor.find('#targetweight').val()
+                                    };
+                                console.log(values);
+                                if (row instanceof FooTable.Row){
+                                    alert("Already there");
+                                } else {
+                                    let tempurl = 'http://139.59.9.37:8001/upstreams/' + rowey.name + '/targets';
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: 'json',
+                                        url: tempurl,
+                                        data: values,
+                                        success: function(e){
+                                            alert("Done.");
+                                            location.reload();
+                                        },
+                                        error: function(err){
+                                            alert("Error.");
+                                        }
+                                    });
+                                }
+                                $modal.modal('hide');
+                            });
+                        });
+                    });
+                    $target.find('#targetid').val(rowey.id);
+                    $target.find('#targetname').val(rowey.name);
+                    $target.modal('show');
+                }    
         });
     });
     </script>      

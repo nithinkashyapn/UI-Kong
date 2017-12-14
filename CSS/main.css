@@ -8,3 +8,29 @@
     min-width: 500px !important;
     min-height:  500px !important; 
 }
+
+.apitable {
+    overflow: scroll;    
+    overflow: auto;
+}
+
+html{
+    min-width: 100vw;
+    overflow: scroll;    
+    overflow: auto;
+}
+
+tr {
+    margin: 10px;
+}
+
+td {
+    white-space: nowrap;
+    overflow: scroll;
+    width: 200px;
+    height: 25px;
+}
+
+table{
+    table-layout:fixed; 
+}
