@@ -102,7 +102,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-body">
-                <table id="target-example-1" class="targetable" data-paging="true" data-sorting="true" data-editing="true" data-editing-allow-add="true" data-editing-allow-edit="false" data-state="true"></table>
+                <table id="target-example-1" class="targetable" data-editing="true" data-state="true"></table>                
             </div>
             </div>
         </div>
@@ -113,15 +113,21 @@
                 <div class="modal-body">
                     <input type="hidden" id="id" name="id"/>
                     <div class="form-group required">
-                        <label for="targetname" class="col-sm-3 control-label">Target</label>
+                        <label for="targetweight" class="col-sm-3 control-label">Consumer ID</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Target" required>
+                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="ID" required>
                         </div>
                     </div>
                     <div class="form-group required">
-                        <label for="targetweight" class="col-sm-3 control-label">Weight</label>
+                        <label for="targetname" class="col-sm-3 control-label">Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="targetweight" name="targetweight" placeholder="Weight" required>
+                            <input type="text" class="form-control" id="targetname" name="targetname" placeholder="Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="targetconfig" class="col-sm-3 control-label">Config</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="targetconfig" name="targetconfig" placeholder="Config" required>
                         </div>
                     </div>
                 </div>
@@ -334,6 +340,7 @@
                         let tempdata = datatarget.data;
                         console.log("Tempdata",tempdata);
                         for(let k=0;k<tempdata.length;k++){
+                            tempdata[k].created_at = new Date(tempdata[k].created_at).toDateString();
                             // console.log(JSON.stringify(texti[k].config));
                             tempdata[k].config = "<div id='code'>" + JSON.stringify(tempdata[k].config) + "</div>";
                         }
@@ -350,7 +357,17 @@
                                             $modal.removeData('row');
                                             $editor[0].reset();
                                             $modal.modal('show');
-                                            console.log(rowey.name);
+                                            // console.log(rowey.name);
+                                        },
+                                        editRow: function(row){
+                                            var values = row.val();
+                                            values.config = values.config.replace("<div id='code'>",'').replace("</div>",'');
+                                            $editor.find('#targetid').val(values.id);
+                                            $editor.find('#targetname').val(values.name);
+                                            $editor.find('#targetconfig').val(values.config);
+                                            $editor.find('#targetweight').val(values.consumer_id);
+                                            $modal.data('row', row);
+                                            $modal.modal('show');
                                         },
                                         deleteRow: function(row){
                                             console.log(rowey.name);
@@ -379,14 +396,15 @@
                                 e.preventDefault();
                                 var row = $modal.data('row'),
                                     values = {
-                                        target: $editor.find('#targetname').val(),
-                                        weight: $editor.find('#targetweight').val()
+                                        consumer_id: $editor.find('#targetweight').val(),
+                                        name: $editor.find('#targetname').val(),
+                                        config: $editor.find('#targetconfig').val()
                                     };
                                 console.log(values);
                                 if (row instanceof FooTable.Row){
                                     alert("Already there");
                                 } else {
-                                    let tempurl = 'http://139.59.9.37:8001/upstreams/' + rowey.name + '/targets';
+                                    let tempurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
                                     $.ajax({
                                         type: "POST",
                                         dataType: 'json',
@@ -407,6 +425,8 @@
                     });
                     $target.find('#targetid').val(rowey.id);
                     $target.find('#targetname').val(rowey.name);
+                    $target.find('#targetweight').val(rowey.name);
+                    $target.find('#targetconfig').val(rowey.name);
                     $target.modal('show');
                 }    
         });

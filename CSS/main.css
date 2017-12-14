@@ -4,6 +4,18 @@
     min-height:  700px !important; 
 } 
 
+#exampleModal .modal-dialog {
+    max-width: 900px !important;
+   }
+   
+#exampleModal .modal-content {
+    max-width: 900px !important;
+    }
+
+#exampleModal .modal-body {
+max-width: 900px !important;
+}
+
 #exampleModal {
     min-width: 500px !important;
     min-height:  500px !important; 
@@ -14,11 +26,15 @@
     overflow: auto;
 }
 
+tr
+{
+    margin: 2px;
+}
+
 td {
     white-space: wrap;
-    max-width: 100px;
     height: 100px;
-    overflow-y: scroll;    
+    overflow-wrap: break-word;
 }
 
 #exampleModal #code{
@@ -27,12 +43,9 @@ td {
     overflow-y: scroll;
     overflow-wrap: break-word;
     background-color: #D3D3D3;
+    width: 300px !important;
 }
 
 table{
     table-layout:fixed; 
-}
-
-#exampleModal .modal-dialog {
- max-width: 900px !important;
 }
