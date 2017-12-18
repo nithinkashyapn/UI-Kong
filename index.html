@@ -20,9 +20,6 @@
         <a class="nav-link" href="apis.html">API</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="plugins.html">PLUGIN</a>
-        </li>
-        <li class="nav-item">
         <a class="nav-link" href="consumers.html">COMSUMER</a>
         </li>
         <li class="nav-item">
@@ -38,11 +35,29 @@
     </div>
     </nav>
     <div class="card-body">
-        Here are some documentation as to what to use and how to use
+        <center>
+                <form name="login">
+                    Username: <input type="text" name="userid"/>
+                    Password: <input type="password" name="pswrd"/><br/><br/>
+                    <input type="button" onclick="check(this.form)" value="Login"/>
+                    <input type="reset" value="Cancel"/>
+                </form>
+        </center>
     </div>
-    </nav>
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script language="javascript">
+        function check(form) {
+            if(form.userid.value == "admin" && form.pswrd.value == "admin") {
+                sessionStorage.setItem(form.userid.value, Math.random());
+                alert("Access given!");
+            }
+            else {
+                alert("Error Password or Username");
+            }
+        }
+    </script>
   </body>
 </html>

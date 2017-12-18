@@ -448,6 +448,12 @@
                 }    
         });
     });
+
+    window.onload = function() {
+        if(!sessionStorage.getItem('admin')){
+            window.open('index.html', '_self');
+        }
+    };
     </script>      
   </body>
 </html>

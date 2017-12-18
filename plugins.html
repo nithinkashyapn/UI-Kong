@@ -103,7 +103,7 @@
     <script>
         jQuery(function($){
 
-        $.getJSON('http://139.59.9.37:8001/apis', function(data) {
+        $.getJSON(KONGIP + '/apis', function(data) {
                 
             for(let i=0;i<data.data.length;i++){
                 data.data[i].created_at = new Date(data.data[i].created_at).toDateString();
@@ -141,7 +141,7 @@
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                let tu = 'http://139.59.9.37:8001/apis/' + row.value.id;
+                                let tu = KONGIP + '/apis/' + row.value.id;
                                 $.ajax({
                                     type: "DELETE",
                                     dataType: 'json',
@@ -186,7 +186,7 @@
                         interim.methods = values.methods;
                         interim.uris = values.uris;
                         interim.upstream_url = values.upstream_url;
-                        let tu = "http://139.59.9.37:8001/apis/" + values.id;
+                        let tu = KONGIP + "/apis/" + values.id;
                         $.ajax({
                             type: "PATCH",
                             dataType: 'json',
@@ -211,7 +211,7 @@
                         $.ajax({
                             type: "PUT",
                             dataType: 'json',
-                            url: "http://139.59.9.37:8001/apis/",
+                            url: KONGIP + "/apis/",
                             data: interim,
                             success: function(e){
                                 alert("Done.");
