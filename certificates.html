@@ -33,6 +33,9 @@
         <li class="nav-item active">
             <a class="nav-link">CERTIFICATE</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="snis.html">SNIS</a>
+        </li>
     </ul>
     <span class="navbar-text">
         1.0
@@ -40,46 +43,31 @@
     </div>
     </nav>
     <div class="card-body">
-        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
+        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true" data-editing-allow-edit="false"></table>
         <!-- Editing Modal Markup -->
         <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="editor-title">
             <div class="modal-dialog" role="document">
                 <form class="modal-content form-horizontal" id="editor">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="editor-title">Add API</h4>
+                        <h4 class="modal-title" id="editor-title">Add CERTIFICATE</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group required">
-                            <label for="name" class="col-sm-3 control-label">Name</label>
+                            <label for="cert" class="col-sm-3 control-label">CERT</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                                <input type="text" class="form-control" id="cert" name="cert" placeholder="Certificate" required>
                             </div>
                         </div>
                         <div class="form-group required">
-                            <label for="strip_uri" class="col-sm-3 control-label">STRIP URI</label>
+                            <label for="key" class="col-sm-3 control-label">KEY</label>
                             <div class="col-sm-9">
-                                <select class="form-control" name="strip_uri" id="strip_uri">
-                                    <option value="true">TRUE</option>
-                                    <option value="false">FALSE</option>
-                                </select>
+                                    <input type="text" class="form-control" id="key" name="key" placeholder="Keys" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="methods" class="col-sm-3 control-label">METHODS</label>
+                            <label for="snis" class="col-sm-3 control-label">SNIs</label>
                             <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="methods" name="methods" placeholder="methods" required>
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="uris" class="col-sm-3 control-label">URIs</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="uris" name="uris" placeholder="URIs" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="upstream_url" class="col-sm-3 control-label">UPSTREAM URL</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="upstream_url" name="upstream_url" placeholder="UPSTREAM URL" required>
+                                    <input type="text" class="form-control" id="snis" name="snis" placeholder="SNIs">
                             </div>
                         </div>
                         <div class="form-group">
@@ -102,7 +90,7 @@
     <script>
         jQuery(function($){
 
-        $.getJSON('http://139.59.9.37:8001/apis', function(data) {
+        $.getJSON( KONGIP + '/certificates', function(data) {
                 
             for(let i=0;i<data.data.length;i++){
                 data.data[i].created_at = new Date(data.data[i].created_at).toDateString();
@@ -112,7 +100,29 @@
                 $editor = $('#editor'),
                 $editorTitle = $('#editor-title'),
                 ft = FooTable.init('#showcase-example-1', {
-                    columns: $.get("./columns.json"),
+                    columns: [
+                        {
+                            "name": "id",
+                            "title": "ID",
+                            "visible": false        
+                        },
+                        {
+                            "name": "created_at",
+                            "title": "Created"
+                        },
+                        {
+                            "name": "cert",
+                            "title": "Cert"
+                        },
+                        {
+                            "name": "key",
+                            "title": "Key"
+                        },
+                        {
+                            "name": "snis",
+                            "title": "SNIs"
+                        }
+                    ],
                     rows: data.data,
                     editing: {
                         addRow: function(){
@@ -124,23 +134,16 @@
                         editRow: function(row){
                             var values = row.val();
                             $editor.find('#id').val(values.id);
-                            $editor.find('#created_at').val(values.created_at);
-                            $editor.find('#strip_uri').val(values.strip_uri);
-                            $editor.find('#name').val(values.name);
-                            $editor.find('#uris').val(values.uris);
-                            $editor.find('#upstream_url').val(values.upstream_url);
-                            $editor.find('#http_if_terminated').val(values.http_if_terminated);
-                            $editor.find('#https_only').val(values.https_only);
-                            $editor.find('#retries').val(values.retries);
-                            $editor.find('#methods').val(values.methods);
-                            $editor.find('#preserve_host').val(values.preserve_host);
+                            $editor.find('#cert').val(values.cert);
+                            $editor.find('#key').val(values.key);
+                            $editor.find('#snis').val(values.snis);                            
                             $modal.data('row', row);
                             $editorTitle.text('Edit ' + values.name + ' ?');
                             $modal.modal('show');
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                let tu = 'http://139.59.9.37:8001/apis/' + row.value.id;
+                                let tu =  KONGIP + "/certificates/" + row.value.id;
                                 $.ajax({
                                     type: "DELETE",
                                     dataType: 'json',
@@ -160,32 +163,23 @@
                 uid = 10001;
         
                 $editor.on('submit', function(e){
-                    console.log("HERE i AM");
                     if (this.checkValidity && !this.checkValidity()) return;
                     e.preventDefault();
                     var row = $modal.data('row'),
                         values = {
                             id: $editor.find('#id').val(),
-                            created_at: $editor.find('#created_at').val(),
-                            strip_uri: $editor.find('#strip_uri').val(),
-                            uris: $editor.find('#uris').val(),
-                            name: $editor.find('#name').val(),
-                            upstream_url: $editor.find('#upstream_url').val(),
-                            http_if_terminated: $editor.find('#http_if_terminated').val(),
-                            https_only: $editor.find('#https_only').val(),
-                            retries: $editor.find('#retries').val(),
-                            methods: $editor.find('#methods').val(),
-                            preserve_host: $editor.find('#preserve_host').val(),
+                            cert: $editor.find('#cert').val(),
+                            key: $editor.find('#key').val(),
+                            snis: $editor.find('#snis').val() 
                         };
 
                     if (row instanceof FooTable.Row){
+                        console.log("Here");
                         let interim = {};
-                        interim.name = values.name;
-                        interim.strip_uri = values.strip_uri;
-                        interim.methods = values.methods;
-                        interim.uris = values.uris;
-                        interim.upstream_url = values.upstream_url;
-                        let tu = "http://139.59.9.37:8001/apis/" + values.id;
+                        interim.cert = values.cert;
+                        interim.key = values.key;
+                        interim.snis = values.snis;
+                        let tu =  KONGIP + "/certificates/" + values.id;
                         $.ajax({
                             type: "PATCH",
                             dataType: 'json',
@@ -202,15 +196,13 @@
                     } else {
                         console.log("Here");
                         let interim = {};
-                        interim.name = values.name;
-                        interim.strip_uri = values.strip_uri;
-                        interim.methods = values.methods;
-                        interim.uris = values.uris;
-                        interim.upstream_url = values.upstream_url;
+                        interim.cert = values.cert;
+                        interim.key = values.key;
+                        interim.snis = values.snis;
                         $.ajax({
-                            type: "PUT",
+                            type: "POST",
                             dataType: 'json',
-                            url: "http://139.59.9.37:8001/apis/",
+                            url: KONGIP + "/certificates/",
                             data: interim,
                             success: function(e){
                                 alert("Done.");
@@ -226,6 +218,12 @@
 
         });
     });
+
+    window.onload = function() {
+        if(!sessionStorage.getItem('admin')){
+            window.open('index.html', '_self');
+        }
+    };
     </script>      
   </body>
 </html>

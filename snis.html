@@ -24,8 +24,8 @@
         <li class="nav-item">
         <a class="nav-link" href="apis.html">API</a>
         </li>
-        <li class="nav-item active">
-        <a class="nav-link">COMSUMER</a>
+        <li class="nav-item">
+        <a class="nav-link" href="consumers.html">COMSUMER</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="loadbalancers.html">LOAD BALANCER</a>
@@ -33,8 +33,8 @@
         <li class="nav-item">
             <a class="nav-link" href="certificates.html">CERTIFICATE</a>
         </li>
-        <li class="nav-item ">
-            <a class="nav-link" href="snis.html">SNIS</a>
+        <li class="nav-item active">
+            <a class="nav-link">SNIS</a>
         </li>
     </ul>
     <span class="navbar-text">
@@ -43,24 +43,25 @@
     </div>
     </nav>
     <div class="card-body">
-        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true"></table>
+        <table id="showcase-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-editing="true" data-state="true" data-editing-allow-edit="false"></table>
         <!-- Editing Modal Markup -->
         <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="editor-title">
             <div class="modal-dialog" role="document">
                 <form class="modal-content form-horizontal" id="editor">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="editor-title">Add CONSUMER</h4>
+                        <h4 class="modal-title" id="editor-title">Add SNI</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">User Name</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Username">
+                        <div class="form-group required">
+                            <label for="name" class="col-sm-3 control-label">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <input type="hidden" class="form-control" id="cert" name="cert" placeholder="ID">
+                        <div class="form-group required">
+                            <label for="cert" class="col-sm-3 control-label">CERT</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="cert" name="cert" placeholder="Certificate" required>
                             </div>
                         </div>
                     </div>
@@ -78,7 +79,7 @@
     <script>
         jQuery(function($){
 
-        $.getJSON( KONGIP + '/consumers', function(data) {
+        $.getJSON( KONGIP + '/snis', function(data) {
                 
             for(let i=0;i<data.data.length;i++){
                 data.data[i].created_at = new Date(data.data[i].created_at).toDateString();
@@ -94,12 +95,12 @@
                             "title": "Created"
                         },
                         {
-                            "name": "id",
-                            "title": "ID"
+                            "name": "name",
+                            "title": "Name"        
                         },
                         {
-                            "name": "username",
-                            "title": "Username"
+                            "name": "ssl_certificate_id",
+                            "title": "SSL ID"
                         }
                     ],
                     rows: data.data,
@@ -112,15 +113,15 @@
                         },
                         editRow: function(row){
                             var values = row.val();
-                            $editor.find('#name').val(values.username);
-                            $editor.find('#cert').val(values.id);                           
+                            $editor.find('#name').val(values.name);
+                            $editor.find('#cert').val(values.ssl_certificate_id);                           
                             $modal.data('row', row);
-                            $editorTitle.text('Edit ' + values.username + ' ?' + 'Note: Only username can be changed!');
+                            $editorTitle.text('Edit ' + values.name + ' ?');
                             $modal.modal('show');
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                let tu =  KONGIP + "/consumers/" + row.value.id;
+                                let tu =  KONGIP + "/snis/" + row.value.name;
                                 $.ajax({
                                     type: "DELETE",
                                     dataType: 'json',
@@ -151,9 +152,8 @@
                     if (row instanceof FooTable.Row){
                         console.log("Here");
                         let interim = {};
-                        interim.custom_id = values.cert;
-                        interim.username = values.name;
-                        let tu =  KONGIP + "/consumers/" + values.cert;
+                        interim.ssl_certificate_id = values.cert;
+                        let tu =  KONGIP + "/snis/" + values.name;
                         $.ajax({
                             type: "PATCH",
                             dataType: 'json',
@@ -168,12 +168,14 @@
                             }
                         });
                     } else {
+                        console.log("Here");
                         let interim = {};
-                        interim.username = values.name;
+                        interim.ssl_certificate_id = values.cert;
+                        interim.name = values.name;
                         $.ajax({
                             type: "POST",
                             dataType: 'json',
-                            url: KONGIP + "/consumers/",
+                            url: KONGIP + "/snis/",
                             data: interim,
                             success: function(e){
                                 alert("Done.");
