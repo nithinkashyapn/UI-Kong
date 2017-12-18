@@ -4,6 +4,7 @@
     <title>Kong Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script type="text/javascript" src="./CONFIG/creds.js"></script>
     <script src="https://momentjs.com/downloads/moment.js"></script>    
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>       
     <script src="https://use.fontawesome.com/574bd8552f.js"></script>
@@ -140,7 +141,7 @@
     <script>
         jQuery(function($){
 
-        $.getJSON('http://139.59.9.37:8001/apis', function(data) {
+        $.getJSON( KONGIP + '/apis', function(data) {
                 
             for(let i=0;i<data.data.length;i++){
                 data.data[i].created_at = new Date(data.data[i].created_at).toDateString();
@@ -238,7 +239,7 @@
                         },
                         deleteRow: function(row){
                             if (confirm('Are you sure you want to delete the row?')){
-                                let tu = 'http://139.59.9.37:8001/apis/' + row.value.id;
+                                let tu = KONGIP + '/apis/' + row.value.id;
                                 $.ajax({
                                     type: "DELETE",
                                     dataType: 'json',
@@ -283,7 +284,7 @@
                         interim.methods = values.methods;
                         interim.uris = values.uris;
                         interim.upstream_url = values.upstream_url;
-                        let tu = "http://139.59.9.37:8001/apis/" + values.id;
+                        let tu = KONGIP + "/apis/" + values.id;
                         $.ajax({
                             type: "PATCH",
                             dataType: 'json',
@@ -308,7 +309,7 @@
                         $.ajax({
                             type: "PUT",
                             dataType: 'json',
-                            url: "http://139.59.9.37:8001/apis/",
+                            url: KONGIP + "/apis/",
                             data: interim,
                             success: function(e){
                                 alert("Done.");
@@ -332,7 +333,7 @@
                     // console.log("Row is", row);
                     rowey.id = row.value.id;
                     rowey.name = row.value.name;
-                    let tarurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
+                    let tarurl = KONGIP + '/apis/' + rowey.name + '/plugins';
                     $.getJSON(tarurl, function(datatarget) {
                         // console.log("DT is",datatarget.data);
                         let tempdata = datatarget.data;
@@ -371,7 +372,7 @@
                                         deleteRow: function(row){
                                             // console.log(rowey.name);
                                             if (confirm('Are you sure you want to delete the row?')){
-                                                let tu = 'http://139.59.9.37:8001/upstreams/'+rowey.name+'/targets/'+row.value.id;
+                                                let tu = KONGIP + '/upstreams/'+rowey.name+'/targets/'+row.value.id;
                                                 $.ajax({
                                                     type: "DELETE",
                                                     dataType: 'json',
@@ -404,7 +405,7 @@
                                 if (row instanceof FooTable.Row){
                                     // console.log("values is", values);
                                     // alert("Already there");
-                                    let tempurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins' + idd;
+                                    let tempurl = KONGIP + '/apis/' + rowey.name + '/plugins' + idd;
                                     $.ajax({
                                         type: "PATCH",
                                         dataType: 'json',
@@ -420,7 +421,7 @@
                                     });
 
                                 } else {
-                                    let tempurl = 'http://139.59.9.37:8001/apis/' + rowey.name + '/plugins';
+                                    let tempurl = KONGIP + '/apis/' + rowey.name + '/plugins';
                                     $.ajax({
                                         type: "POST",
                                         dataType: 'json',
